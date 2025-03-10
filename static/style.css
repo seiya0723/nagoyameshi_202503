@@ -1,0 +1,56 @@
+.allauth_body{
+    margin:0;
+    position:relative;
+    height:100vh;
+}
+
+.body_area {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+.body_area_inner{
+    padding:1rem;
+    border:solid 0.2rem orange;
+}
+h1 {
+    text-align:center;
+}
+
+input[type="text"],input[type="password"],input[type="email"]{
+
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    font-size: 1rem;
+    color: #495057;
+    background: white;
+    border: 1px solid orange;
+    border-radius: .25rem;
+
+    box-sizing: border-box;
+}
+
+button{
+    display:block;
+    width:100%;
+    margin:0.5rem 0;
+    font-size: 1rem;
+    background:white;
+    border: 1px solid orange;
+    cursor:pointer;
+    transition:0.2s;
+
+    padding:0.5rem;
+
+    line-height: 1.5;
+
+    user-select: none;
+    text-align: center;
+    vertical-align:middle;
+}
+button:hover{
+    background:orange;
+    transition:0.2s;
+}

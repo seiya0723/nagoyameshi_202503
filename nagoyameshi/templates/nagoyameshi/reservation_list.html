@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}予約{% endblock %}
+{% block content %}
+<h1>予約一覧</h1>
+<a href="{% url 'mypage' %}">戻る</a>
+
+<div class="row">
+    {% for reservation in object_list %}
+    <div class="col-4 border p-2">
+        <a href="{% url 'detail' reservation.restaurant.id %}" >
+            <div>予約日時: {{ reservation.datetime }}</div>
+            <div>予約人数: {{ reservation.headcount }}</div>
+            <div>店舗名: {{ reservation.restaurant }}</div>
+            <div>電話番号: {{ reservation.restaurant.tel }}</div>
+            <div>
+                住所: 〒{{ reservation.restaurant.post_code }}<br>
+                {{ reservation.restaurant.address }}
+            </div>
+        </a>      
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}トップ画面{% endblock %}
+{% block content %}
+
+{# 検索用のフォームを用意する #}
+<form action="" method="get">
+    {# csrf_token はpostメソッドのときだけに必要。getメソッドではいらない。 #}
+    {# {% csrf_token %} #}
+    <input class="" type="text" placeholder="キーワードを入力してください" name="search" value="{{ request.GET.search }}">
+    <input type="submit" value="検索">
+</form>
+
+
+
+<div class="row">
+    {% for restaurant in restaurants %}
+    <div class="col-4 border p-2">
+        {# URL設定を読み取ってリンクをつくるには？ #}
+        <a href="{% url 'detail' restaurant.id %}" >
+            <h3>{{ restaurant.name }}</h3>
+            {# TODO: ここに画像を表示させたり、店舗の基本情報を表示させたりする #} 
+            <img src="{{ restaurant.image.url }}" style="width:180px; height:auto;">
+        </a>                
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}店舗詳細画面{% endblock %}
+{% block content %}
+
+<h2>{{ restaurant.name }}</h2>
+
+<div>{{ restaurant.description }}</div>
+
+{# お気に入り登録ボタン #}
+<form action="{% url 'favorite' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="restaurant" value="{{ restaurant.id }}">
+    <input type="hidden" name="user" value="{{ request.user.id }}">
+
+    {% if is_favorite %}
+    <input class="btn btn-success" type="submit" value="お気に入り登録済み">
+    {% else %}
+    <input class="btn btn-outline-success" type="submit" value="お気に入り登録する">
+    {% endif %}
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>営業時間</th>
+            <th>価格帯</th>
+            <th>所在地</th>
+            <th>電話番号</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ restaurant.start_at }} ~ {{ restaurant.end_at }}</td>
+            <td>{{ restaurant.cost }} 円</td>
+            <td>{{ restaurant.post_code }} {{ restaurant.address }}</td>
+            <td>{{ restaurant.tel }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>レビュー一覧</h3>
+
+{% for review in reviews %}
+<div class="border">
+    <div>作成日時: {{ review.created_at }}</div>
+    <div>編集日時: {{ review.updated_at }}</div>
+    <div>投稿者: {{ review.user }}</div>
+    <div>コメント: {{ review.content }}</div>
+</div>
+{% endfor %}
+
+<h3>レビューフォーム</h3>
+
+<form action="{% url 'new' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="restaurant" value="{{ restaurant.id }}">
+    <input type="hidden" name="user" value="{{ request.user.id }}">
+    <textarea class="form-control" name="content" maxlength="100" placeholder="レビュー内容"></textarea>
+    <input class="form-control" type="submit" value="レビュー送信">
+</form>
+
+<h3>予約フォーム</h3>
+
+<form action="{% url 'reservation' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="restaurant" value="{{ restaurant.id }}">
+    <input type="hidden" name="user" value="{{ request.user.id }}">
+    <label>予約時間: </label><input type="datetime-local" name="datetime">
+    <label>予約人数: </label><input type="number" min="0" name="headcount">
+    <input class="form-control" type="submit" value="予約する">
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}MyPage{% endblock %}
+{% block content %}
+<h1>マイページ</h1>
+
+<div>会員登録情報</div>
+<a href="{% url 'favorite_list' %}"><div>お気に入り一覧</div></a>
+<a href="{% url 'reservation_list' %}"><div>予約一覧</div></a>
+<a href="{% url 'account_logout' %}">ログアウト</a>
+
+<h2>有料会員登録</h2>
+
+{% if is_premium %}
+<a href="{% url 'portal' %}">サブスクリプションの設定をする</a>
+{% else %}
+<form action="{% url 'checkout' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="有料会員登録をする">
+</form>
+{% endif %}
+
+{% endblock %}
