@@ -1,1 +1,1 @@
-web: gunicorn config.wsgi:application --log-file -
+web: gunicorn nagoyameshi_project.wsgi:application --log-file -
