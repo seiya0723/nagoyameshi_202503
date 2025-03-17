@@ -202,13 +202,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #画像関連
 MEDIA_URL = '/media/'
-
-if DEBUG: 
-    MADIA_ROOT = BASE_DIR / 'media_lacal'
-
-
-# MEDIA_ROOTは保存先の場所
-#MEDIA_ROOT = BASE_DIR / 'media'
+MADIA_ROOT = BASE_DIR / 'media_lacal'
 
 
 # APIキーをGitHubに公開してしまうと、不正に利用される可能性があるので、ローカルで動かすときだけ記入。
@@ -294,4 +288,5 @@ if not DEBUG:
     #DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'
 
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
