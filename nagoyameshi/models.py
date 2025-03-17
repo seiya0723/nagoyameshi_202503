@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from django.urls import reverse
+from cloudinary_storage.storage import MediaCloudinaryStorage
+
 
 # 会員
 User = get_user_model()
@@ -21,12 +23,15 @@ class Category(models.Model):
     def str_id(self):
         return str(self.id)
 
-
+#from cloudinary_storage.storage import MediaCloudinaryStorage
 # 店舗
 class Restaurant(models.Model):
     category = models.ForeignKey(Category, verbose_name="カテゴリ", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="名前", max_length=50)
-    image = models.ImageField(verbose_name="画像", upload_to="media_local/restaurant/")
+    #image = models.ImageField(verbose_name="画像", upload_to="media_local/restaurant/")
+
+    image = models.ImageField(verbose_name="画像", upload_to="nagoyameshi/restaurant/image/")
+
     description = models.CharField(verbose_name="店舗説明", max_length=500)
     start_at = models.TimeField(verbose_name="営業開始時間", default=timezone.now)
     end_at = models.TimeField(verbose_name="営業終了時間", default=timezone.now)
