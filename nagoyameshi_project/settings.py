@@ -283,9 +283,10 @@ if not DEBUG:
 
     import cloudinary 
     cloudinary.config( 
-      cloud_name    = os.environ["CLOUD_NAME"]
-      api_key       = os.environ["API_KEY"]
-      api_secret    = os.environ["API_SECRET"]
+      cloud_name    = os.environ["CLOUD_NAME"],
+
+      api_key       = os.environ["API_KEY"],
+      api_secret    = os.environ["API_SECRET"],
       secure = True
     )
 
