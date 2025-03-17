@@ -202,7 +202,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #画像関連
 MEDIA_URL = '/media/'
+
 MADIA_ROOT = BASE_DIR / 'media_lacal'
+
+
+# MEDIA_ROOTは保存先の場所
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # APIキーをGitHubに公開してしまうと、不正に利用される可能性があるので、ローカルで動かすときだけ記入。
 STRIPE_API_KEY          = ""
