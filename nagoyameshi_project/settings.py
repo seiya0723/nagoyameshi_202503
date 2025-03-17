@@ -274,14 +274,21 @@ if not DEBUG:
     
 
     #cloudinaryの設定
-    """
     CLOUDINARY_STORAGE = { 
             'CLOUD_NAME': os.environ["CLOUD_NAME"], 
             'API_KEY'   : os.environ["API_KEY"], 
             'API_SECRET': os.environ["API_SECRET"],
             "SECURE"    : True,
             }
-    """
+
+    import cloudinary 
+    cloudinary.config( 
+      cloud_name    = os.environ["CLOUD_NAME"]
+      api_key       = os.environ["API_KEY"]
+      api_secret    = os.environ["API_SECRET"]
+      secure = True
+    )
+
     CLOUDINARY_URL = os.environ["CLOUDINARY_URL"]
 
     #これで全てのファイルがアップロード可能(上限20MB。ビュー側でアップロードファイル制限するなら基本これでいい)
