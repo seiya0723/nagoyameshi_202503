@@ -59,6 +59,9 @@ if DEBUG:
     EMAIL_BACKEND   = "django.core.mail.backends.console.EmailBackend"
 
 else:
+    EMAIL_BACKEND   = "django.core.mail.backends.console.EmailBackend"
+    
+    """
     EMAIL_BACKEND   = 'django.core.mail.backends.smtp.EmailBackend'
     #  ホストはgmail.com 
     EMAIL_HOST      = 'smtp.gmail.com'
@@ -68,14 +71,13 @@ else:
     EMAIL_PORT      = 587
 
     #【重要】メールのパスワードとメールアドレスの入力後、GitHubへのプッシュは厳禁
-    """
+    
     EMAIL_HOST_USER     = 'ここに送信元のgmailのメールアドレスを'
     EMAIL_HOST_PASSWORD = 'ここにアプリパスワードを'
-    """
 
     EMAIL_HOST_USER     = os.environ["EMAIL_HOST_USER"]
     EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
-
+    """
 
 
 #################django-allauthでのメール認証設定ここまで###################
