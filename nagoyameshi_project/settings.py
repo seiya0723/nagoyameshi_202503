@@ -280,16 +280,18 @@ if not DEBUG:
     
 
     #cloudinaryの設定
+    """
     CLOUDINARY_STORAGE = { 
             'CLOUD_NAME': os.environ["CLOUD_NAME"], 
             'API_KEY'   : os.environ["API_KEY"], 
             'API_SECRET': os.environ["API_SECRET"],
             "SECURE"    : True,
             }
+    """
+    CLOUDINARY_URL = os.environ["CLOUDINARY_URL"]
 
     #これで全てのファイルがアップロード可能(上限20MB。ビュー側でアップロードファイル制限するなら基本これでいい)
     #DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'
 
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-    CLOUDINARY_URL = os.environ["CLOUDINARY_URL"]
