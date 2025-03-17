@@ -259,8 +259,6 @@ if not DEBUG:
 
     # 静的ファイル(static)の存在場所を指定する。
     STATIC_ROOT = BASE_DIR / 'static'
-    #                                                                                  ↓ ここは変わる可能性がある。
-    MEDIA_URL = f"https://res.cloudinary.com/{os.environ['CLOUD_NAME']}/image/upload/v1742204805/"
 
     # DBの設定 HerokuPostgres
     DATABASES = { 
