@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from django.urls import reverse
-from cloudinary_storage.storage import MediaCloudinaryStorage
 
 
 # 会員
