@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-6*b3k--_lqr1^-uxrtz9teujx_mo1kw1m0dkyc)6mikofr708w
 # SECURITY WARNING: don't run with debug turned on in production!
 
 # djangoのエラーをブラウザに表示するかしないか。
-#DEBUG = True
-DEBUG = False
+DEBUG = True
+#DEBUG = False
 
 # 基本、デプロイをしたあとはエラー画面をクライアント側に表示してはいけない。
 # djangoを使っている、ライブラリのバージョンや、サーバー側のコードがわかってしまうので、不正アクセスのヒントを与えているようなもの。
@@ -60,7 +60,7 @@ if DEBUG:
 
 else:
     EMAIL_BACKEND   = "django.core.mail.backends.console.EmailBackend"
-    
+
     """
     EMAIL_BACKEND   = 'django.core.mail.backends.smtp.EmailBackend'
     #  ホストはgmail.com 
