@@ -293,3 +293,5 @@ if not DEBUG:
     #DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'
 
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+    CLOUDINARY_URL = os.environ["CLOUDINARY_URL"]
