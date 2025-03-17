@@ -6,8 +6,13 @@ from django.utils.safestring import mark_safe
 class CategoryAdmin(admin.ModelAdmin):
     list_display	= [ "id", "name", "created_at", "updated_at" ]
 
+    search_fields = [ "name" ]
+
 class RestaurantAdmin(admin.ModelAdmin):
     list_display	= [ "id", "category", "name", "image", "description", "start_at", "end_at", "cost", "post_code", "address", "tel", "created_at", "updated_at" ]
+
+    search_fields = [ "name" ]
+    list_filter = ["category"]
 
     def image(self, obj):
         return mark_safe('<img src="{}" style="width:100px; height:auto;">'.format(obj.image.url))

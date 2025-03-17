@@ -23,9 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6*b3k--_lqr1^-uxrtz9teujx_mo1kw1m0dkyc)6mikofr708w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#デバッグモードは無効化しておく。
+
+# djangoのエラーをブラウザに表示するかしないか。
+#DEBUG = True
 DEBUG = False
+
+# 基本、デプロイをしたあとはエラー画面をクライアント側に表示してはいけない。
+# djangoを使っている、ライブラリのバージョンや、サーバー側のコードがわかってしまうので、不正アクセスのヒントを与えているようなもの。
 
 ALLOWED_HOSTS = []
 
@@ -64,8 +68,15 @@ else:
     EMAIL_PORT      = 587
 
     #【重要】メールのパスワードとメールアドレスの入力後、GitHubへのプッシュは厳禁
+    """
     EMAIL_HOST_USER     = 'ここに送信元のgmailのメールアドレスを'
     EMAIL_HOST_PASSWORD = 'ここにアプリパスワードを'
+    """
+
+    EMAIL_HOST_USER     = os.environ["EMAIL_HOST_USER"]
+    EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+
+
 
 #################django-allauthでのメール認証設定ここまで###################
 
@@ -174,6 +185,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+#STATICFILES_DIRS = [ BASE_DIR / "static" ]
+
 # TODO: 静的ファイルの読み込み設定がwhitenoiseに影響が及ぶので、デバッグ時にのみ有効にしておく。
 if DEBUG:
     STATICFILES_DIRS = [ BASE_DIR / "static" ]
@@ -216,10 +229,11 @@ if not DEBUG:
     INSTALLED_APPS.append('cloudinary_storage')
 
     # ALLOWED_HOSTSに(Djangoの公開を許可するホスト名(ドメイン名))を入力
+    # 環境変数からホスト名を読み込みするようにする。
     ALLOWED_HOSTS = [ os.environ["HOST"] ]
 
     # パスワードのハッシュ化、CSRFトークンの生成に使われる。
-    SECRET_KEY = os.environ ["SECRETKEY"]
+    SECRET_KEY = os.environ["SECRETKEY"]
     
     # 静的ファイル配信ミドルウェア、whitenoiseを使用。※ 順番不一致だと動かないため下記をそのままコピーする。
     MIDDLEWARE = [ 
@@ -237,7 +251,7 @@ if not DEBUG:
     # 静的ファイル(static)の存在場所を指定する。
     STATIC_ROOT = BASE_DIR / 'static'
 
-    # DBの設定
+    # DBの設定 HerokuPostgres
     DATABASES = { 
             'default': {
                 'ENGINE': 'django.db.backends.postgresql_psycopg2',

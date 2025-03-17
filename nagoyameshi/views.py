@@ -2,17 +2,23 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 
-from django.views.generic import TemplateView, DetailView, ListView 
-from .models import Restaurant, Review, Favorite, Reservation, PremiumUser
+from django.views.generic import TemplateView, DetailView, ListView, UpdateView
+from .models import Restaurant, Review, Favorite, Reservation, PremiumUser,Category
 
 # スペース区切りの検索に対応するためのクエリビルダ
 from django.db.models import Q
+
+
+import datetime
+from django.utils import timezone
 
 class TopView(TemplateView):
     template_name = "nagoyameshi/top.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        context["categories"] = Category.objects.all()
         
         query = Q()
 
@@ -47,12 +53,25 @@ class TopView(TemplateView):
             words = self.request.GET["search"].replace("　"," ").split(" ")
 
             for word in words:
-                query &= Q(name__icontains=word)                
+                query &= Q(name__icontains=word)        
 
+        """
             # query の wordsのキーワードがすべて条件に含まれた状態になる。
             context['restaurants'] = Restaurant.objects.filter(query)
         else:
-            context['restaurants'] = Restaurant.objects.all()
+            context['restaurants'] = Restaurant.objects.filter(query)
+            # ↑は Restaurant.objects.all()と同じ。
+        """
+        # TODO: カテゴリの検索もするため、queryにカテゴリの条件も加える。
+        if "category" in self.request.GET:
+            # カテゴリ未選択の場合は、カテゴリ未指定で検索する。
+            if self.request.GET["category"] != "":
+                query &= Q(category=self.request.GET["category"]) 
+
+
+
+        context['restaurants'] = Restaurant.objects.filter(query)
+
 
         return context
 
@@ -113,8 +132,6 @@ class ReviewCreateView(View):
 
         #========有料会員であるかのチェック=======================
 
-
-
         # POSTメソッド受け取り処理
         form = ReviewForm(request.POST)
 
@@ -125,7 +142,15 @@ class ReviewCreateView(View):
             print(form.errors)
         
         return redirect("detail", request.POST["restaurant"])
-    
+
+
+class ReviewUpdateView(UpdateView):
+    model = Review
+    fields = '__all__'
+    template_name_suffix = '_update_form'
+
+
+
 class FavoriteCreateView(View):
     def post(self, request, *args, **kwargs):
         #すでに登録済みの場合、削除
@@ -142,13 +167,70 @@ class FavoriteCreateView(View):
 
         return redirect("detail", request.POST["restaurant"])
     
+
+
 class ReservationCreateView(View):
     def post(self, request, *args, **kwargs):
+        #TODO: フローチャートに合わせて予約投稿できるデータに制限を加える。
+        
+        #now = datetime.datetime.now() 
+        now = timezone.now() 
+
+
         form = ReservationForm(request.POST)
         if form.is_valid():
+            # 送られてきた全データが型変換されて辞書型で手に入る。
+            cleaned = form.clean()
+
+            # datetime型でも比較が出来る
+            if now > cleaned["datetime"]:
+                print("予約指定した時刻が現在よりも過去になっています")
+                return redirect("detail", request.POST["restaurant"])
+
+            # 1日の始まりから考えて、営業終了が先か、営業開始が先かで分岐する。(例: 18:00開店、02:00 閉店の場合。18:00 ~ 02:00 までに予約をしないといけない。)
+            if cleaned["restaurant"].start_at < cleaned["restaurant"].end_at:
+                if cleaned["restaurant"].start_at > cleaned["datetime"].time() or cleaned["datetime"].time() > cleaned["restaurant"].end_at:
+                    print("予約指定した時刻が営業時間外です")
+                    return redirect("detail", request.POST["restaurant"])
+            else:
+                # 例: 夕方開店、未明の閉店の店の場合。
+                if cleaned["restaurant"].end_at < cleaned["datetime"].time() < cleaned["restaurant"].start_at:
+                    print("予約指定した時刻が営業時間外です")
+                    return redirect("detail", request.POST["restaurant"])                
+
+
+            # TODO:店舗の収容可能人数を記録するフィールドを追加して、指定した人数が収容できるか分岐する。
+            if cleaned["restaurant"].capacity < cleaned["headcount"]:
+                print("店舗の収容人数を超えています")
+                return redirect("detail", request.POST["restaurant"])  
+
+
+            # +- 30分で同じ店舗に予約がされているか調べる。
+            reservation_start_time = cleaned["datetime"] - datetime.timedelta(minutes=30)
+            reservation_end_time = cleaned["datetime"] + datetime.timedelta(minutes=30)
+
+            # 同じ店舗に、+- 30分で予約されているすべてのデータを取り出し、予約人数を集計する。
+            from django.db.models import Sum
+            data = Reservation.objects.filter(datetime__gte=reservation_start_time, datetime__lte=reservation_end_time , restaurant=cleaned["restaurant"] ).aggregate(Sum("headcount"))
+
+            print(data)
+            print(data["headcount__sum"])
+
+            if data["headcount__sum"] == None:
+                data["headcount__sum"] = 0
+
+            # TIPS: データ無しの場合0ではなく、Noneが帰ってくる。
+            if cleaned["restaurant"].capacity < cleaned["headcount"] + data["headcount__sum"]:
+                print("店舗の収容人数を超えています。予約できる人数を超過しています。")
+                return redirect("detail", request.POST["restaurant"])  
+
+
+            # TODO:予約を保存する。
             form.save()
         else:
             print(form.errors)
+
+
         return redirect("detail", request.POST["restaurant"])
     
 class MypageView(TemplateView):
@@ -161,13 +243,69 @@ class MypageView(TemplateView):
 
         return context
 
+
+from .forms import UserForm
+
+class MypageUpdateView(View):
+    def get(self,request,*args, **kwargs):
+        return render(request, "nagoyameshi/mypage_update.html")
+    
+    def post(self,request,*args, **kwargs):
+
+        # 編集を受け付ける。
+        form = UserForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.error)
+
+        return redirect("mypage")
+
+
+
+
 class FavoriteListView(ListView):
     model = Favorite
     template_name = "nagoyamehi/favorite_list.html"
 
+    # Favorite.objects.all() 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["object_list"] = Favorite.objects.filter(user=self.request.user)
+
+        return context
+
 class ReservationListView(ListView):
     model = Reservation
     template_name = "nagoyameshi/reservation_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["object_list"] = Reservation.objects.filter(user=self.request.user)
+
+        return context
+
+
+class ReservationCancelView(View):
+
+    def post(self, request, pk, *args, **kwargs):
+
+        # 予約のキャンセル(削除)
+        reservation = Reservation.objects.filter(id=pk, user=request.user)
+
+        # TODO: 必要があればif文で更に絞り込み(例:予約キャンセル不可の時間になった場合はキャンセルしない。)
+
+        reservation.delete()
+
+        return redirect("mypage")
+
+
+
+
+
 
 # サブスク登録はログイン済みのユーザーだけ
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -278,6 +416,7 @@ class PortalView(LoginRequiredMixin,View):
         return redirect(portalSession.url)
 
 
+# 実際には使われていない。
 class PremiumView(View):
     def get(self, request, *args, **kwargs):
 

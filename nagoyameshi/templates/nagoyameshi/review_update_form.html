@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}レビュー編集{% endblock %}
+{% block content %}
+<h1>編集</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% comment %}
+    フォームテンプレートで
+
+    {{ form }} とするとすべてのフィールドのフォームが作られる。
+
+    {{ form.フィールド名 }} とすると、指定したフィールドのフォームだけ作られる。
+
+    {{ form.フィールド名.value }} とすると、指定したフィールドの値が表示される。
+
+    日時は、djangoの言語設定で表示されるため、適宜フォーマットを編集して使う。
+    {% endcomment %}
+
+    <input type="hidden" name="user" value="{{ form.user.value }}">
+    <input type="hidden" name="restaurant" value="{{ form.restaurant.value }}">
+    <input type="hidden" name="created_at" value="{{ form.created_at.value|date:'Y-m-d H:i:s' }}">
+
+    <textarea class="form-control" name="content" maxlength="100" placeholder="レビュー内容">{{ form.content.value }}</textarea>
+    <input class="form-control" type="submit" value="レビュー送信">
+
+    <br>
+    <a href="{% url 'detail' form.restaurant.value %}">店舗ページへ戻る</a>
+    <input type="submit" class="btn btn-primary" value="更新">
+</form>
+{% endblock %}

@@ -17,6 +17,11 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+    # カテゴリ検索した時、プルダウンメニューを見やすくするためのモデルメソッド。テンプレートで呼び出す。
+    def str_id(self):
+        return str(self.id)
+
+
 # 店舗
 class Restaurant(models.Model):
     category = models.ForeignKey(Category, verbose_name="カテゴリ", on_delete=models.CASCADE)
@@ -31,6 +36,8 @@ class Restaurant(models.Model):
     tel = models.CharField(verbose_name="電話番号", max_length=11)
     created_at = models.DateTimeField(verbose_name="作成日時", default=timezone.now)
     updated_at = models.DateTimeField(verbose_name="更新日時", auto_now=True)
+
+    capacity = models.PositiveIntegerField(verbose_name="収容人数",default=20)
     
     def __str__ (self):
         return self.name

@@ -7,6 +7,15 @@
 <form action="" method="get">
     {# csrf_token はpostメソッドのときだけに必要。getメソッドではいらない。 #}
     {# {% csrf_token %} #}
+
+
+    <select name="category">
+        <option value="">カテゴリを選択してください</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}" {% if request.GET.category == category.str_id %}selected{% endif %}>{{ category.name }}</option>
+        {% endfor %}
+    </select>
+
     <input class="" type="text" placeholder="キーワードを入力してください" name="search" value="{{ request.GET.search }}">
     <input type="submit" value="検索">
 </form>

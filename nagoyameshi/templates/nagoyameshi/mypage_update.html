@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}MyPageUpdate{% endblock %}
+{% block content %}
+<h2>ユーザー情報変更</h2>
+
+<form action="{% url 'mypage_update' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="last_name" value="{{ request.user.last_name }}" placeholder="性">
+    <input type="text" name="first_name" value="{{ request.user.first_name }}" placeholder="名">
+    <input type="submit" value="編集する">
+</form>
+
+{% endblock %}

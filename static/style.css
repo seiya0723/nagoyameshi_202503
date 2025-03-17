@@ -1,3 +1,21 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* allauth form */
 .allauth_body{
     margin:0;
     position:relative;
@@ -14,11 +32,11 @@
     padding:1rem;
     border:solid 0.2rem orange;
 }
-h1 {
+.allauth_body h1 {
     text-align:center;
 }
 
-input[type="text"],input[type="password"],input[type="email"]{
+.allauth_body input[type="text"],input[type="password"],input[type="email"]{
 
     display: block;
     width: 100%;
@@ -32,7 +50,7 @@ input[type="text"],input[type="password"],input[type="email"]{
     box-sizing: border-box;
 }
 
-button{
+.allauth_body button{
     display:block;
     width:100%;
     margin:0.5rem 0;
@@ -50,7 +68,7 @@ button{
     text-align: center;
     vertical-align:middle;
 }
-button:hover{
+allauth_body button:hover{
     background:orange;
     transition:0.2s;
 }

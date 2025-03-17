@@ -30,11 +30,18 @@ urlpatterns = [
     path("", views.TopView.as_view(), name="top" ),
     path("detail/<int:pk>/", views.RestaurantDetailView.as_view(), name="detail"),
     path("detail/new/", views.ReviewCreateView.as_view(), name="new"),
+
+    path('review/update/<int:pk>/', views.ReviewUpdateView.as_view(), name="review_update"),
+
     path("detail/favorite/", views.FavoriteCreateView.as_view(), name="favorite"),
     path("detail/reservation", views.ReservationCreateView.as_view(), name="reservation"),
+    path("reservation/cancel/<int:pk>/", views.ReservationCancelView.as_view(), name="reservation_cancel"),
+
+
     path("mypage/", views.MypageView.as_view(), name="mypage"),
     path("mypage/favorite/", views.FavoriteListView.as_view(), name="favorite_list"),
     path("mypage/reservation/", views.ReservationListView.as_view(), name="reservation_list"),
+    path("mypage_update/", views.MypageUpdateView.as_view(), name="mypage_update"),
 
     path("checkout/", views.CheckoutView.as_view(), name="checkout"),
     path("success/", views.SuccessView.as_view(), name="success"),

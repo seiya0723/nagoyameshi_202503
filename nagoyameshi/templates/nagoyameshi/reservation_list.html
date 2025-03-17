@@ -17,7 +17,14 @@
                 住所: 〒{{ reservation.restaurant.post_code }}<br>
                 {{ reservation.restaurant.address }}
             </div>
-        </a>      
+        </a>
+
+
+        <form action="{% url 'reservation_cancel' reservation.id %}" method="post" class="text-end">
+            {% csrf_token %}
+            <input class="btn btn-danger" type="submit" value="予約キャンセル">
+        </form>
+
     </div>
     {% endfor %}
 </div>

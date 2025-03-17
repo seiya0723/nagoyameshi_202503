@@ -12,6 +12,14 @@
             <h3>{{ favorite.restaurant }}</h3>
             <img src="{{ favorite.restaurant.image.url }}" style="width:180px; height:auto;">
         </a>      
+
+        <form action="{% url 'favorite' %}" method="post" class="text-end">
+            {% csrf_token %}
+            <input type="hidden" name="restaurant" value="{{ favorite.restaurant.id }}">
+            <input type="hidden" name="user" value="{{ request.user.id }}">
+            <input class="btn btn-danger" type="submit" value="お気に入り登録解除">
+        </form>
+
     </div>
     {% endfor %}
 </div>

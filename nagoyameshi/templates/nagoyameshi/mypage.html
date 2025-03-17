@@ -8,6 +8,23 @@
 <a href="{% url 'favorite_list' %}"><div>お気に入り一覧</div></a>
 <a href="{% url 'reservation_list' %}"><div>予約一覧</div></a>
 <a href="{% url 'account_logout' %}">ログアウト</a>
+<a href="{% url 'account_change_password' %}">パスワードの変更</a>
+
+{# TODO: 別ページ化する。 #}
+{% comment %}
+<h2>ユーザー情報変更</h2>
+
+<form action="{% url 'mypage_update' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="first_name" value="{{ request.user.first_name }}" placeholder="名前">
+    <input type="text" name="last_name" value="{{ request.user.last_name }}" placeholder="名字">
+    <input type="submit" value="編集する">
+</form>
+{% endcomment %}
+
+<a href="{% url 'mypage_update' %}">プロフィール変更</a>
+
+
 
 <h2>有料会員登録</h2>
 

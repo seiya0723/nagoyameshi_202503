@@ -23,18 +23,22 @@
 <table class="table">
     <thead>
         <tr>
+            <th>カテゴリ</th>
             <th>営業時間</th>
             <th>価格帯</th>
             <th>所在地</th>
             <th>電話番号</th>
+            <th>収容人数</th>
         </tr>
     </thead>
     <tbody>
         <tr>
+            <td>{{ restaurant.category.name }}</td>
             <td>{{ restaurant.start_at }} ~ {{ restaurant.end_at }}</td>
             <td>{{ restaurant.cost }} 円</td>
             <td>{{ restaurant.post_code }} {{ restaurant.address }}</td>
             <td>{{ restaurant.tel }}</td>
+            <td>{{ restaurant.capacity }}</td>
         </tr>
     </tbody>
 </table>
@@ -45,9 +49,18 @@
 <div class="border">
     <div>作成日時: {{ review.created_at }}</div>
     <div>編集日時: {{ review.updated_at }}</div>
-    <div>投稿者: {{ review.user }}</div>
+    {# <div>投稿者: {{ review.user }}</div> #}
+
+    <div>投稿者: {{ review.user.last_name }} {{ review.user.first_name }}</div>
     <div>コメント: {{ review.content }}</div>
+
+    {% if review.user == request.user %}
+    <a href="{% url 'review_update' review.id %}">編集する</a>
+    {% endif %}
+
 </div>
+{% empty %}
+<div>投稿されたレビューはありません。</div>
 {% endfor %}
 
 <h3>レビューフォーム</h3>
